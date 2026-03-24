@@ -1,143 +1,136 @@
-<img width="585" height="883" alt="image" src="https://github.com/user-attachments/assets/1e52fcc4-1ede-4669-a703-bc56f6dbe7d9" />
-## ✨ Financial Multimodal RAG System (System-1 vs System-2 Hybrid)
+# ✨ Financial Multimodal RAG System
 
-A production-style Retrieval Augmented Generation (RAG) system designed to handle large-scale financial documents with intelligent routing, multimodal ingestion, table preservation, metadata filtering and analytics capabilities.
+### System-1 vs System-2 Hybrid Retrieval Architecture
 
-This system supports both offline bulk-ingested corpora and real-time user document uploads, enabling scalable document question answering across multiple formats.
+A production-oriented Retrieval Augmented Generation (RAG) platform designed for **large-scale financial document intelligence**, combining fast cached retrieval (System-1) with deep reasoning retrieval and reranking (System-2).
 
----
-
-## 🚀 Key Highlights
-
-- Hybrid System-1 (Fast Cached Retrieval) vs System-2 (Deep Reasoning Retrieval + Reranking)
-- Handles PDF, DOCX, PPT, CSV, TXT, Markdown, HTML
-- Multimodal-ready (scanned PDFs / images supported via Docling / Unstructured pipeline)
-- Financial report reasoning with citations + page grounding
-- Production-oriented modular architecture
-- Metadata filtering ready vector search (Qdrant)
-- Intelligent routing between offline corpus and uploaded documents
-- CSV analytics + visualization capability
-- Redis-style caching for latency optimization
-- MCP tool-calling ready pipeline design
+The system enables scalable question answering over **bulk-ingested corporate reports as well as real-time user document uploads**, while maintaining citation grounding, structured analytics capability and modular extensibility.
 
 ---
 
-## 🧠 Architecture Diagram
+## 🧠 Architecture Overview
 
-<img width="585" height="883" alt="image" src="https://github.com/user-attachments/assets/ea4c0055-38bd-4560-a111-023a4d571107" />
-
-
+![RAG Pipeline](rag-pipeline.png.jpeg)
 
 ---
 
-## 🔄 System Flow
+## 🚀 Core Capabilities
 
-1. Offline ingestion pipeline converts financial PDFs → structured JSON knowledge.
-2. Tables are serialized and preserved for reasoning accuracy.
-3. Vector embeddings + metadata stored in Qdrant vector database.
-4. User asks a question through Streamlit interface.
-5. Query routing detects company keyword → routes to offline corpus OR upload processor.
-6. Uploaded documents are parsed using Unstructured pipeline dynamically.
-7. Hybrid retrieval fetches relevant chunks (vector + keyword).
-8. LLM reranking improves context precision.
-9. Final reasoning performed using compact context window.
-10. Answer returned with citations and page references.
-
----
-
-## 📂 Supported Document Formats
-
-- PDF (text + scanned)
-- DOCX
-- PPT / PPTX
-- CSV
-- Markdown
-- TXT
-- HTML
-- Future ready → SQL / DB connectors
+* Hybrid **System-1 (fast cached retrieval)** and **System-2 (deep reasoning retrieval + reranking)** pipeline
+* Supports **PDF, DOCX, PPT, CSV, TXT, Markdown, HTML**
+* Multimodal ingestion ready (scanned PDFs supported via Docling / Unstructured pipeline)
+* Financial reasoning with **page-level citations and grounded answers**
+* Intelligent query routing between **offline corpus and user uploads**
+* Metadata-aware vector retrieval using **Qdrant**
+* Integrated **tabular analytics and visualization pipeline**
+* Cache-first latency optimization design
+* Modular architecture designed for **agentic extensions and tool-calling workflows**
 
 ---
 
-## 📊 CSV Analytics Capability
+## ⚙️ System Design Philosophy
 
-- Automated exploratory data analysis
-- Statistical summaries
-- Pattern detection
-- Visualization support via Matplotlib and Seaborn
-- LLM assisted tabular reasoning
+This platform follows a cognitive architecture inspired design:
 
----
+| Layer               | Role                                                         |
+| ------------------- | ------------------------------------------------------------ |
+| **System-1**        | Low latency cached retrieval for previously answered queries |
+| **System-2**        | Context refinement, reranking and deep reasoning             |
+| **Routing Layer**   | Detects query intent and selects optimal retrieval path      |
+| **Analytics Layer** | Structured reasoning for tabular datasets                    |
+| **Reasoning Layer** | Final answer synthesis with citation grounding               |
 
-## ⚡ Performance Optimizations
-
-- Cache-based fast retrieval layer (System-1 behavior)
-- LLM reranking only when needed (System-2 deep reasoning)
-- Metadata filtering reduces vector search latency
-- Parent page retrieval reduces hallucination risk
-- Modular ingestion enables scalable corpus growth
+This hybrid approach balances **speed, accuracy and scalability**.
 
 ---
 
-## 📚 Citation Grounding
+## 🔄 End-to-End Pipeline Flow
 
-Every answer is grounded with:
-
-- Page index
-- Document SHA reference
-- Relevant chunk evidence
-
-This ensures auditability and explainability for financial reasoning tasks.
-
----
-
-## 🧩 MCP / Tool Calling Ready
-
-Architecture designed to integrate:
-
-- Claude MCP tools
-- External data connectors
-- Autonomous retrieval workflows
-- Multi-agent extensions
+1. Offline ingestion converts financial PDFs into structured knowledge representations.
+2. Tables are serialized and preserved to improve reasoning accuracy.
+3. Vector embeddings and metadata indexes are stored in Qdrant.
+4. User query is received via Streamlit interface.
+5. Routing detects company/entity keywords and selects retrieval strategy.
+6. Uploaded documents are parsed dynamically using Unstructured ingestion pipeline.
+7. Hybrid retrieval fetches relevant context (vector + metadata filtering).
+8. Cross-encoder reranking improves chunk relevance.
+9. LLM performs reasoning on compressed context window.
+10. Final grounded answer is returned with citations and relevant page references.
 
 ---
 
-## 🧱 Production Style Design
+## 📊 Tabular Analytics Engine
 
-- Modular ingestion / retrieval / reasoning layers
-- Configurable pipelines
-- Parallel retrieval support
-- Evaluation friendly output structure
-- Extensible vector DB layer
+The system includes an embedded structured analytics workflow:
 
----
-
-## 🙏 Acknowledgement
-
-Parts of document parsing inspiration and retrieval structuring concepts were explored from community RAG challenge implementations.
-
-Core architecture enhancements, routing logic, multimodal ingestion strategy, caching design, analytics integration and system optimization were independently designed and implemented in this project.
+* Automated exploratory data profiling
+* Statistical summaries and pattern detection
+* Visualization support via Matplotlib / Seaborn
+* LLM-assisted tabular reasoning
+* Context fusion between numeric insights and textual evidence
 
 ---
 
-## 🎯 Future Improvements
+## ⚡ Performance Optimization Strategy
 
-- Full multimodal VLM reasoning
-- Auto metadata extraction during ingestion
-- Adaptive chunking strategies
-- Latency aware retrieval planner
-- Agentic workflow orchestration
-- Cloud deployment with distributed vector search
+* Query-level caching for near-zero latency repeat responses
+* Conditional reranking to minimize LLM compute cost
+* Metadata filtering to reduce vector search space
+* Parent page retrieval to reduce hallucination risk
+* Session-scoped temporary indexing for user uploads
+* Modular ingestion enabling incremental corpus expansion
+
+---
+
+## 📚 Citation Grounding & Explainability
+
+Each generated response includes:
+
+* Source document reference
+* Page index grounding
+* Evidence chunk attribution
+
+This ensures **auditability, transparency and trustworthiness**, which is critical for financial intelligence applications.
+
+---
+
+## 🧩 Tool-Calling & Agentic Readiness
+
+The architecture is designed to integrate seamlessly with:
+
+* MCP tool ecosystems
+* External knowledge connectors
+* Autonomous retrieval agents
+* Multi-step reasoning workflows
+
+---
+
+## 🧱 Production-Ready Engineering Practices
+
+* Modular ingestion / retrieval / reasoning layers
+* Configurable pipeline orchestration
+* Parallel retrieval capability
+* Evaluation-friendly output schema
+* Extensible vector database abstraction
+
+---
+
+## 🎯 Future Enhancements
+
+* Full multimodal VLM reasoning integration
+* Adaptive semantic chunking strategies
+* Automated metadata extraction during ingestion
+* Latency-aware retrieval planner
+* Distributed vector search deployment
+* Multi-agent orchestration layer
 
 ---
 
 ## 🖥 Demo
 
-- Working demo video available
-- Streamlit interactive QA interface
+* Interactive Streamlit QA interface
+* End-to-end working demo video available
 
 ---
 
-⭐ If you like this project, consider starring the repo!
-
-
-Just make sure rag-pipeline.png is in the *root of your repo* (same level as README.md) and it'll render automatically on GitHub.
+⭐ If you found this project interesting, consider starring the repository.
