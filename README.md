@@ -1,6 +1,4 @@
-Here's your complete README with the image swapped in:
-
-markdown
+<img width="585" height="883" alt="image" src="https://github.com/user-attachments/assets/1e52fcc4-1ede-4669-a703-bc56f6dbe7d9" />
 ## ✨ Financial Multimodal RAG System (System-1 vs System-2 Hybrid)
 
 A production-style Retrieval Augmented Generation (RAG) system designed to handle large-scale financial documents with intelligent routing, multimodal ingestion, table preservation, metadata filtering and analytics capabilities.
@@ -26,7 +24,9 @@ This system supports both offline bulk-ingested corpora and real-time user docum
 
 ## 🧠 Architecture Diagram
 
-![RAG Pipeline Architecture](rag-pipeline.png)
+<img width="585" height="883" alt="image" src="https://github.com/user-attachments/assets/ea4c0055-38bd-4560-a111-023a4d571107" />
+
+
 
 ---
 
