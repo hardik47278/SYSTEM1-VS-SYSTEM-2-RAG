@@ -11,7 +11,7 @@ The system enables scalable question answering over **bulk-ingested corporate re
 ## 🧠 Architecture Overview
 
 <p align="center">
-  <img src="rag-pipeline.png.jpeg" width="500"/>
+  <img src="architecture.png" width="500"/>
 </p>
 
 ---
