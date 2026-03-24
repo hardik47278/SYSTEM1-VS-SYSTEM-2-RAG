@@ -10,7 +10,9 @@ The system enables scalable question answering over **bulk-ingested corporate re
 
 ## 🧠 Architecture Overview
 
-![RAG Pipeline](rag-pipeline.png.jpeg)
+<p align="center">
+  <img src="rag-pipeline.png.jpeg" width="500"/>
+</p>
 
 ---
 
