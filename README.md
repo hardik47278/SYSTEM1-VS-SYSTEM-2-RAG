@@ -127,7 +127,7 @@ The architecture is designed to integrate with:
 ## 🖥 Demo
 
 * Interactive Streamlit Question Answering Interface  
-* End-to-end working demo video available  
+* Coming soon
 
 ---
 
