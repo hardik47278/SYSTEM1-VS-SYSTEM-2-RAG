@@ -1,4 +1,7 @@
-✨ Financial Multimodal RAG System (System-1 vs System-2 Hybrid)
+Here's your complete README with the image swapped in:
+
+markdown
+## ✨ Financial Multimodal RAG System (System-1 vs System-2 Hybrid)
 
 A production-style Retrieval Augmented Generation (RAG) system designed to handle large-scale financial documents with intelligent routing, multimodal ingestion, table preservation, metadata filtering and analytics capabilities.
 
@@ -6,7 +9,7 @@ This system supports both offline bulk-ingested corpora and real-time user docum
 
 ---
 
-🚀 Key Highlights
+## 🚀 Key Highlights
 
 - Hybrid System-1 (Fast Cached Retrieval) vs System-2 (Deep Reasoning Retrieval + Reranking)
 - Handles PDF, DOCX, PPT, CSV, TXT, Markdown, HTML
@@ -21,50 +24,13 @@ This system supports both offline bulk-ingested corpora and real-time user docum
 
 ---
 
-🧠 Architecture Diagram
+## 🧠 Architecture Diagram
 
-                    ┌─────────────────────┐
-                    │   User Question     │
-                    └─────────┬───────────┘
-                              │
-                    ┌─────────▼───────────┐
-                    │ Query Understanding │
-                    │ (Company / Intent)  │
-                    └─────────┬───────────┘
-                              │
-                 ┌────────────┴────────────┐
-                 │                         │
-     ┌───────────▼───────────┐   ┌─────────▼─────────┐
-     │ Offline Corpus Router │   │ Upload Processor  │
-     │ (Metadata Filtering)  │   │ (Unstructured)    │
-     └───────────┬───────────┘   └─────────┬─────────┘
-                 │                         │
-                 └────────────┬────────────┘
-                              │
-                     ┌────────▼────────┐
-                     │ Hybrid Retrieval │
-                     │ Vector + Keyword │
-                     └────────┬────────┘
-                              │
-                     ┌────────▼────────┐
-                     │  LLM Reranking   │
-                     └────────┬────────┘
-                              │
-                     ┌────────▼────────┐
-                     │  Context Builder │
-                     └────────┬────────┘
-                              │
-                     ┌────────▼────────┐
-                     │   LLM Reasoning  │
-                     └────────┬────────┘
-                              │
-                     ┌────────▼────────┐
-                     │ Answer + Citation│
-                     └──────────────────┘
+![RAG Pipeline Architecture](rag-pipeline.png)
 
 ---
 
-🔄 System Flow
+## 🔄 System Flow
 
 1. Offline ingestion pipeline converts financial PDFs → structured JSON knowledge.
 2. Tables are serialized and preserved for reasoning accuracy.
@@ -79,7 +45,7 @@ This system supports both offline bulk-ingested corpora and real-time user docum
 
 ---
 
-📂 Supported Document Formats
+## 📂 Supported Document Formats
 
 - PDF (text + scanned)
 - DOCX
@@ -92,19 +58,17 @@ This system supports both offline bulk-ingested corpora and real-time user docum
 
 ---
 
-📊 CSV Analytics Capability
+## 📊 CSV Analytics Capability
 
 - Automated exploratory data analysis
 - Statistical summaries
 - Pattern detection
-- Visualization support via:
-  - Matplotlib
-  - Seaborn
+- Visualization support via Matplotlib and Seaborn
 - LLM assisted tabular reasoning
 
 ---
 
-⚡ Performance Optimizations
+## ⚡ Performance Optimizations
 
 - Cache-based fast retrieval layer (System-1 behavior)
 - LLM reranking only when needed (System-2 deep reasoning)
@@ -114,7 +78,7 @@ This system supports both offline bulk-ingested corpora and real-time user docum
 
 ---
 
-📚 Citation Grounding
+## 📚 Citation Grounding
 
 Every answer is grounded with:
 
@@ -126,7 +90,7 @@ This ensures auditability and explainability for financial reasoning tasks.
 
 ---
 
-🧩 MCP / Tool Calling Ready
+## 🧩 MCP / Tool Calling Ready
 
 Architecture designed to integrate:
 
@@ -137,7 +101,7 @@ Architecture designed to integrate:
 
 ---
 
-🧱 Production Style Design
+## 🧱 Production Style Design
 
 - Modular ingestion / retrieval / reasoning layers
 - Configurable pipelines
@@ -147,7 +111,7 @@ Architecture designed to integrate:
 
 ---
 
-🙏 Acknowledgement
+## 🙏 Acknowledgement
 
 Parts of document parsing inspiration and retrieval structuring concepts were explored from community RAG challenge implementations.
 
@@ -155,7 +119,7 @@ Core architecture enhancements, routing logic, multimodal ingestion strategy, ca
 
 ---
 
-🎯 Future Improvements
+## 🎯 Future Improvements
 
 - Full multimodal VLM reasoning
 - Auto metadata extraction during ingestion
@@ -166,7 +130,7 @@ Core architecture enhancements, routing logic, multimodal ingestion strategy, ca
 
 ---
 
-🖥 Demo
+## 🖥 Demo
 
 - Working demo video available
 - Streamlit interactive QA interface
@@ -174,3 +138,6 @@ Core architecture enhancements, routing logic, multimodal ingestion strategy, ca
 ---
 
 ⭐ If you like this project, consider starring the repo!
+
+
+Just make sure rag-pipeline.png is in the *root of your repo* (same level as README.md) and it'll render automatically on GitHub.
