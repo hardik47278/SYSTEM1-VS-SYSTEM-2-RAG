@@ -135,4 +135,54 @@ The architecture is designed to integrate seamlessly with:
 
 ---
 
+
+
 ⭐ If you found this project interesting, consider starring the repository.
+
+mermaid
+flowchart TD
+    A[("⌨️ User Query / File Upload")] --> B
+
+    B["⚡ Cache Check\nquery · retrieval · upload hash"]
+    B --> C["✅ Cache Hit\nReturn Answer + Citations"]
+    B --> D["❌ Cache Miss\nDocument / Query Router"]
+
+    D --> E["📚 System 1 — Offline Corpus\nMetadata Filtering · Qdrant"]
+    D --> F["📎 System 2 — User Upload\nDocling · Unstructured"]
+    D --> G["📊 System 3 — CSV / XLSX / SQL\nProfiling · Visualisation"]
+
+    F --> F1["📄 PDF"] & F2["📝 DOCX · PPT"] & F3["🗒️ TXT · MD · HTML"]
+    F1 & F2 & F3 --> F4["✂️ Clean + Chunk\nTable Extract · Serialise"]
+    F4 --> F5["📦 Temp Index\nDynamic · Session-scoped"]
+
+    E --> R["🔗 Vector Retrieval\n+ Parent Page Fetch"]
+    F5 --> R
+    G --> GA["🧠 Analytical Context\nStructured → LLM"]
+
+    R --> LR["🤖 LLM Reranking / Reasoning\nCross-encoder · Context Fusion"]
+    GA --> LR
+
+    LR --> ANS["💬 Answer + Citations + Relevant Pages"]
+    ANS --> CACHE["💿 Store in Cache"]
+    CACHE --> UI[["🖥️ Streamlit UI"]]
+
+    style A fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style B fill:#0e3a40,stroke:#06b6d4,color:#e2e8f0
+    style C fill:#0e3d2a,stroke:#10b981,color:#e2e8f0
+    style D fill:#3d1a24,stroke:#f43f5e,color:#e2e8f0
+    style E fill:#1a2a4a,stroke:#3b82f6,color:#e2e8f0
+    style F fill:#2a1a4a,stroke:#8b5cf6,color:#e2e8f0
+    style G fill:#3d2e0a,stroke:#f59e0b,color:#e2e8f0
+    style F1 fill:#2a1a4a,stroke:#8b5cf6,color:#e2e8f0
+    style F2 fill:#2a1a4a,stroke:#8b5cf6,color:#e2e8f0
+    style F3 fill:#2a1a4a,stroke:#8b5cf6,color:#e2e8f0
+    style F4 fill:#2a1a4a,stroke:#8b5cf6,color:#e2e8f0
+    style F5 fill:#2a1a4a,stroke:#8b5cf6,color:#e2e8f0
+    style GA fill:#3d2e0a,stroke:#f59e0b,color:#e2e8f0
+    style R fill:#1a2a4a,stroke:#3b82f6,color:#e2e8f0
+    style LR fill:#2a1a4a,stroke:#8b5cf6,color:#e2e8f0
+    style ANS fill:#0e3d2a,stroke:#10b981,color:#e2e8f0
+    style CACHE fill:#0e3a40,stroke:#06b6d4,color:#e2e8f0
+    style UI fill:#3d2200,stroke:#f97316,color:#e2e8f0
+
+
