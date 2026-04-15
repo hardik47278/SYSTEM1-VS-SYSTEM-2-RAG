@@ -450,38 +450,3 @@ configs = {"base": base_config,
 if __name__ == "__main__":
     root_path = here() / "data" / "test_set"
     pipeline = Pipeline(root_path, run_config=max_nst_o3m_config)
-    
-    
-    # This method parses pdf reports into a jsons. It creates jsons in the debug/data_01_parsed_reports. These jsons used in the next steps. 
-    # It also stores raw output of docling in debug/data_01_parsed_reports_debug, these jsons contain a LOT of metadata, and not used anywhere
-    # pipeline.parse_pdf_reports_sequential() 
-    
-    
-    # This method should be called only if you want run configs with serialized tables
-    # It modifies the jsons in the debug/data_01_parsed_reports, adding a new field "serialized_table" to each table
-    # pipeline.serialize_tables(max_workers=5) 
-    
-    
-    # This method converts jsons from the debug/data_01_parsed_reports into much simpler jsons, that is a list of pages in markdown
-    # New jsons can be found in debug/data_02_merged_reports
-    # pipeline.merge_reports() 
-
-
-    # This method exports the reports into plain markdown format. They used only for review and for full text search config: gemini_thinking_config
-    # New files can be found in debug/data_03_reports_markdown
-    # pipeline.export_reports_to_markdown() 
-    
-
-    # This method splits the reports into chunks, that are used for vectorization
-    # New jsons can be found in databases/chunked_reports
-    # pipeline.chunk_reports() 
-    
-    
-    # This method creates vector databases from the chunked reports
-    # New files can be found in databases/vector_dbs
-    # pipeline.create_vector_dbs() 
-    
-    
-    # This method processes the questions and answers
-    # Questions processing logic depends on the run_config
-    # pipeline.process_questions() 
