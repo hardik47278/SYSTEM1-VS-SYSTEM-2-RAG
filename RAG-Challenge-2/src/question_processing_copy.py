@@ -18,14 +18,10 @@ from ragas.metrics import LLMContextPrecisionWithoutReference
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
-
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 CACHE: Dict[str, Dict] = {}
 CACHE_TTL = timedelta(hours=1)
-
-
 class QuestionsProcessor:
     def __init__(
         self,
@@ -72,10 +68,6 @@ class QuestionsProcessor:
 
         # stored per question call
         self.response_data = None
-
-        # -------------------------
-        # RAGAS evaluator LLM
-        # -------------------------
         self.evaluator_llm = None
         if self.enable_ragas:
             try:
@@ -84,19 +76,15 @@ class QuestionsProcessor:
                     raise ValueError("OPENAI_API_KEY not found. Check .env location and load_dotenv().")
 
                 client = OpenAI(api_key=api_key)
-
-                
                 self.evaluator_llm = llm_factory("gpt-4o-mini", client=client)
             except Exception as e:
                 logger.warning(f"Failed to init RAGAS evaluator LLM: {e}")
                 self.enable_ragas = False
-
     def _load_questions(self, questions_file_path: Optional[Union[str, Path]]) -> List[Dict[str, str]]:
         if questions_file_path is None:
             return []
         with open(questions_file_path, "r", encoding="utf-8") as file:
             return json.load(file)
-
     def _format_retrieval_results(self, retrieval_results) -> str:
         """Format vector retrieval results into RAG context string"""
         if not retrieval_results:
@@ -109,7 +97,6 @@ class QuestionsProcessor:
             context_parts.append(f'Text retrieved from page {page_number}: \n"""\n{text}\n"""')
 
         return "\n\n---\n\n".join(context_parts)
-
     def _make_cache_key(self, company_name: str, question: str) -> str:
         raw = f"{company_name}|{question}|{self.answering_model}"
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()
@@ -201,7 +188,6 @@ class QuestionsProcessor:
         score = metric.single_turn_score(sample)
         logger.info("context precison score: {score}")
         return float(score)
-
     def get_answer_for_company(self, company_name: str, question: str) -> dict:
         """
         Full logic (NOT SKIPPED):
@@ -347,7 +333,6 @@ class QuestionsProcessor:
             "na_count": na_count,
             "success_count": success_count,
         }
-
     def process_questions_list(
         self,
         questions_list: List[dict],
@@ -398,7 +383,6 @@ class QuestionsProcessor:
 
         statistics = self._calculate_statistics(processed_questions, print_stats=True)
         return {"questions": processed_questions, "answer_details": self.answer_details, "statistics": statistics}
-
     def _process_single_question(self, question_data: dict) -> dict:
         question_index = question_data.get("_question_index", 0)
 
@@ -448,10 +432,8 @@ class QuestionsProcessor:
 
         except Exception as err:
             return self._handle_processing_error(question_text, err, question_index)
-
     def _handle_processing_error(self, question_text: str, err: Exception, question_index: int) -> dict:
         import traceback
-
         error_message = str(err)
         tb = traceback.format_exc()
         error_ref = f"#/answer_details/{question_index}"
@@ -459,12 +441,10 @@ class QuestionsProcessor:
 
         with self._lock:
             self.answer_details[question_index] = error_detail
-
         print(f"Error encountered processing question: {question_text}")
         print(f"Error type: {type(err).__name__}")
         print(f"Error message: {error_message}")
         print(f"Full traceback:\n{tb}\n")
-
         if self.new_challenge_pipeline:
             return {
                 "question_text": question_text,
@@ -473,17 +453,14 @@ class QuestionsProcessor:
                 "error": f"{type(err).__name__}: {error_message}",
                 "answer_details": {"$ref": error_ref},
             }
-
         return {
             "question": question_text,
             "answer": None,
             "error": f"{type(err).__name__}: {error_message}",
             "answer_details": {"$ref": error_ref},
         }
-
     def _post_process_submission_answers(self, processed_questions: List[dict]) -> List[dict]:
         submission_answers = []
-
         for q in processed_questions:
             question_text = q.get("question_text") or q.get("question")
             value = "N/A" if "error" in q else (q.get("value") if "value" in q else q.get("answer"))
@@ -509,9 +486,7 @@ class QuestionsProcessor:
                 submission_answer["reasoning_process"] = step_by_step_analysis
 
             submission_answers.append(submission_answer)
-
         return submission_answers
-
     def _save_progress(
         self,
         processed_questions: List[dict],
@@ -544,7 +519,6 @@ class QuestionsProcessor:
             }
             with open(output_file, "w", encoding="utf-8") as file:
                 json.dump(submission, file, ensure_ascii=False, indent=2)
-
     def process_all_questions(
         self,
         output_path: str = "questions_with_answers.json",
@@ -569,7 +543,6 @@ class QuestionsProcessor:
 
         individual_answers = {}
         aggregated_references = []
-
         def process_company_question(company: str) -> tuple[str, dict]:
             sub_question = rephrased_questions.get(company)
             if not sub_question:
