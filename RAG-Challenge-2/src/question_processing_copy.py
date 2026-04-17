@@ -85,7 +85,7 @@ class QuestionsProcessor:
 
                 client = OpenAI(api_key=api_key)
 
-                # Use cheap evaluator model (answering model stays unchanged)
+                
                 self.evaluator_llm = llm_factory("gpt-4o-mini", client=client)
             except Exception as e:
                 logger.warning(f"Failed to init RAGAS evaluator LLM: {e}")
@@ -219,7 +219,7 @@ class QuestionsProcessor:
         if cached is not None:
             return cached
 
-        # ✅ CRITICAL FIX: always define retrieval_results (prevents UnboundLocalError)
+        
         retrieval_results = []
 
         # choose retriever
