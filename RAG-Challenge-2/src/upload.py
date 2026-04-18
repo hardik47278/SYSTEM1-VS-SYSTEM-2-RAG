@@ -186,10 +186,6 @@ def cache_set(key: str, value: str, sources=None, context_precision: float = 0.0
         "created_at": datetime.now(),
     }
 
-
-# -------------------------------
-# TEXT CLEANING
-# -------------------------------
 def normalize_text(s: str) -> str:
     if not s:
         return ""
@@ -300,10 +296,6 @@ def create_csv_index(csv_path: str, csv_name: str, base_dir: str = None) -> str:
     logger.info("⏱ create_csv_index TOTAL: %.3fs", (datetime.now() - start).total_seconds())
     return file_id
 
-
-# -------------------------------
-# PDF INGEST (Qdrant)
-# -------------------------------
 def partition_document_pdf(file_path: str):
     start = datetime.now()
     elements = partition_pdf(filename=file_path, strategy="fast", infer_table_structure=True)
@@ -344,10 +336,6 @@ def build_documents_from_pdf_chunks(chunks, paper_id: str) -> List[LCDocument]:
         raise RuntimeError("No valid chunks extracted from PDF")
     return docs
 
-
-# -------------------------------
-# DOCX INGEST (Qdrant)
-# -------------------------------
 def read_docx_sections(path: Path) -> List[Tuple[str, str]]:
     d = docx.Document(str(path))
     sections: List[Tuple[str, str]] = []
@@ -372,7 +360,6 @@ def read_docx_sections(path: Path) -> List[Tuple[str, str]]:
         raise RuntimeError("No valid sections extracted from DOCX (too little text?)")
     return sections
 
-
 def build_documents_from_docx_sections(sections: List[Tuple[str, str]], file_id: str) -> List[LCDocument]:
     docs: List[LCDocument] = []
     for i, (title, content) in enumerate(sections):
@@ -383,20 +370,14 @@ def build_documents_from_docx_sections(sections: List[Tuple[str, str]], file_id:
             )
         )
     return docs
-
-
-# -------------------------------
-# PPTX INGEST (Qdrant)
-# -------------------------------
 def build_documents_from_pptx(
     pptx_path: str,
     file_id: str,
-    images_output_dir: str = None,   # ✅ now optional — defaults to absolute path
+    images_output_dir: str = None,
     save_images: bool = True,
 ) -> List[LCDocument]:
     start = datetime.now()
 
-    # ✅ Always use absolute path next to upload.py
     if images_output_dir is None:
         images_output_dir = str(PPTX_IMAGES_DIR)
 
@@ -459,10 +440,6 @@ def build_documents_from_pptx(
         raise RuntimeError("No valid chunks extracted from PPTX (too little text?)")
     return docs
 
-
-# -------------------------------
-# INDEX BUILDERS
-# -------------------------------
 def create_pdf_index(pdf_path: str, pdf_name: str, base_dir: str = None) -> str:
     start = datetime.now()
     elements = partition_document_pdf(pdf_path)
@@ -501,8 +478,6 @@ def create_docx_index(docx_path: str, docx_name: str, base_dir: str = None) -> s
 
 def create_pptx_index(pptx_path: str, pptx_name: str, base_dir: str = None) -> str:
     start = datetime.now()
-
-    # ✅ Always use absolute path — no more permission errors
     docs = build_documents_from_pptx(
         pptx_path=pptx_path,
         file_id=pptx_name,
@@ -514,8 +489,7 @@ def create_pptx_index(pptx_path: str, pptx_name: str, base_dir: str = None) -> s
     _upsert_lcdocs_to_qdrant(docs, file_id=file_id)
     logger.info("⏱ create_pptx_index TOTAL: %.3fs", (datetime.now() - start).total_seconds())
     return file_id
-
-
+    
 def create_excel_llama_index(file_path: str, filename: str) -> str:
     start = datetime.now()
     reader = DoclingReader()
@@ -593,12 +567,6 @@ def format_history(history: List[Dict[str, str]], max_turns: int = 8) -> str:
             lines.append(f"{role}: {content}")
     return "\n".join(lines).strip()
 
-
-
-# -------------------------------
-# RETRIEVAL (SYNC)
-# -------------------------------
-# REPLACE retrieve_sync with this
 def retrieve_sync(state: UploadRAGState):
     start = datetime.now()
     file_id = state["file_index"]
@@ -664,11 +632,6 @@ def retrieve_sync(state: UploadRAGState):
     logger.info("⏱ retrieve_sync (qdrant): %.4fs", (datetime.now() - start).total_seconds())
     return {"context": context, "sources": sources, "approved": approved, "applied_filters": filter_dict}
 
-
-
-# -------------------------------
-# PROMPT
-# -------------------------------
 PROMPT = PromptTemplate(
     input_variables=["history", "context", "question"],
     template="""
@@ -686,11 +649,6 @@ Question:
 {question}
 """,
 )
-
-
-# -------------------------------
-# RAGAS / CONTEXT PRECISION
-# -------------------------------
 _evaluator_llm = None
 if OPENAI_API_KEY:
     try:
@@ -702,8 +660,6 @@ if OPENAI_API_KEY:
 else:
     logger.warning("OPENAI_API_KEY not found; RAGAS context precision will be disabled.")
     _evaluator_llm = None
-
-
 def compute_context_precision_sync(question: str, final_answer: str, context: str) -> float:
     if not _evaluator_llm:
         return 0.0
@@ -715,29 +671,20 @@ def compute_context_precision_sync(question: str, final_answer: str, context: st
     )
     score = metric.single_turn_score(sample)
     return float(score)
-
-
-# -------------------------------
-# GENERATE (SYNC STREAMING via LangGraph ONLY)
-# -------------------------------
 def generate_sync(state: UploadRAGState, config):
     if not state.get("approved"):
         yield {"final_answer": "answer not found", "context_precision": 0.0, "sources": []}
         return
 
     start = datetime.now()
-
     MAX_CONTEXT_CHARS = 8000
     trimmed_context = (state.get("context") or "")[:MAX_CONTEXT_CHARS]
-
     history_text = format_history(state.get("chat_history", []), max_turns=8)
-
     prompt = PROMPT.format(
         history=history_text,
         context=trimmed_context,
         question=state["question"],
     )
-
     parts: List[str] = []
     for chunk in LLM.stream(prompt):
         text = getattr(chunk, "content", None)
@@ -746,32 +693,23 @@ def generate_sync(state: UploadRAGState, config):
             yield {"final_answer": "".join(parts)}
 
     final_answer = "".join(parts).strip()
-
     score = compute_context_precision_sync(
         state["question"],
         final_answer,
         state.get("context") or "",
     )
-
-    # ✅ IMPORTANT: write the new turn into state so MemorySaver persists it
     history = list(state.get("chat_history", []))
     history.append({"role": "user", "content": state["question"]})
     history.append({"role": "assistant", "content": final_answer})
-
     logger.info("⏱ generate_sync (LLM stream): %.4fs", (datetime.now() - start).total_seconds())
     logger.info("context precision computed (upload): %s", score)
-
     yield {
         "final_answer": final_answer,
         "context_precision": score,
         "sources": state.get("sources", []),
         "chat_history": history,  # ✅ persisted by checkpointer
     }
-
-
-# -------------------------------
-# GRAPH (LangGraph) - SYNC
-# -------------------------------
+    
 graph = StateGraph(UploadRAGState)
 graph.add_node("retrieve", retrieve_sync)
 graph.add_node("generate", generate_sync)
@@ -779,22 +717,14 @@ graph.set_entry_point("retrieve")
 graph.add_edge("retrieve", "generate")
 graph.add_edge("generate", END)
 app = graph.compile(checkpointer=MemorySaver())
-
-
 def _lg_config(thread_id: str):
     return {"configurable": {"thread_id": thread_id}}
-
-
-# -------------------------------
-# PUBLIC API: NON-STREAM (sync final)
-# -------------------------------
 def answer_from_uploaded_file(question: str, file_index: str, session_id: str) -> dict:
     cache_key = make_cache_key(question, file_index)
     cached = cache_get(cache_key)
     if cached:
         answer, sources, cp = cached
         return {"final_answer": answer, "cached": True, "sources": sources, "context_precision": float(cp)}
-
     state: UploadRAGState = {
         "question": question,
         "file_index": file_index,
@@ -804,7 +734,7 @@ def answer_from_uploaded_file(question: str, file_index: str, session_id: str) -
         "cached": False,
         "context_precision": 0.0,
         "sources": [],
-        "chat_history": [],  # ✅ init
+        "chat_history": [],
         "applied_filters": {}
     }
 
@@ -822,11 +752,7 @@ def answer_from_uploaded_file(question: str, file_index: str, session_id: str) -
 
     final_state["cached"] = False
     return final_state
-
-
-# -------------------------------
-# PUBLIC API: STREAM (LangGraph only) - SYNC
-# -------------------------------
+    
 def stream_answer_from_uploaded_file(question: str, file_index: str, session_id: str):
     cache_key = make_cache_key(question, file_index)
     cached = cache_get(cache_key)
@@ -873,12 +799,8 @@ def stream_answer_from_uploaded_file(question: str, file_index: str, session_id:
                 last_cp = float(g["context_precision"])
             if "sources" in g and g["sources"] is not None:
                 last_sources = g["sources"]
-
     if last_answer:
         cache_set(cache_key, last_answer, last_sources, context_precision=float(last_cp))
-
     yield {"event": "done", "final_answer": last_answer, "sources": last_sources, "context_precision": float(last_cp), "cached": False}
-
-
 def answer_from_uploaded_pdf(question: str, pdf_index: str) -> dict:
     return answer_from_uploaded_file(question=question, file_index=pdf_index)
