@@ -11,7 +11,6 @@ import concurrent.futures
 import hashlib
 from datetime import datetime, timedelta
 import logging
-
 from ragas.llms import llm_factory
 from ragas import SingleTurnSample
 from ragas.metrics import LLMContextPrecisionWithoutReference
@@ -43,7 +42,6 @@ class QuestionsProcessor:
         self.documents_dir = Path(documents_dir)
         self.vector_db_dir = Path(vector_db_dir)
         self.subset_path = Path(subset_path) if subset_path else None
-
         self.new_challenge_pipeline = new_challenge_pipeline
         self.return_parent_pages = parent_document_retrieval
         self.llm_reranking = llm_reranking
@@ -54,19 +52,12 @@ class QuestionsProcessor:
         self.api_provider = api_provider
         self.openai_processor = APIProcessor(provider=api_provider)
         self.full_context = full_context
-
         self.answer_details: List[Optional[dict]] = []
         self.detail_counter = 0
         self._lock = threading.Lock()
         self.enable_ragas = True
-
-        # Load .env so OPENAI_API_KEY is available for RAGAS evaluator
         load_dotenv()
-
-        # used by subset extraction / references
         self.companies_df = None
-
-        # stored per question call
         self.response_data = None
         self.evaluator_llm = None
         if self.enable_ragas:
@@ -74,7 +65,6 @@ class QuestionsProcessor:
                 api_key = os.getenv("OPENAI_API_KEY")
                 if not api_key:
                     raise ValueError("OPENAI_API_KEY not found. Check .env location and load_dotenv().")
-
                 client = OpenAI(api_key=api_key)
                 self.evaluator_llm = llm_factory("gpt-4o-mini", client=client)
             except Exception as e:
@@ -558,19 +548,16 @@ class QuestionsProcessor:
                 company, answer_dict = future.result()
                 individual_answers[company] = answer_dict
                 aggregated_references.extend(answer_dict.get("references", []))
-
         unique_refs = {}
         for ref in aggregated_references:
             key = (ref.get("pdf_sha1"), ref.get("page_index"))
             unique_refs[key] = ref
         aggregated_references = list(unique_refs.values())
-
         comparative_answer = self.openai_processor.get_answer_from_rag_context(
             question=question,
             rag_context=individual_answers,
             model=self.answering_model,
         )
-
         self.response_data = self.openai_processor.response_data
         comparative_answer["references"] = aggregated_references
         return comparative_answer
