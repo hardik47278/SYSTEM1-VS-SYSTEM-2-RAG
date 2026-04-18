@@ -68,15 +68,10 @@ PPTX_IMAGES_DIR = BASE_DIR / "pptx_images"
 BASE_DIR.mkdir(parents=True, exist_ok=True)
 PPTX_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
-# -------------------------------
-# LOGGING
-# -------------------------------
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# -------------------------------
-# ENV
-# -------------------------------
 load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
