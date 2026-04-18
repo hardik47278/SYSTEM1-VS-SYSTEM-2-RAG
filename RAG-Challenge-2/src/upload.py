@@ -1,9 +1,3 @@
-# ===============================
-# upload.py  (UPLOAD FILE: PDF/DOCX/XLSX/PPTX/CSV)
-# LangGraph token streaming enabled using ONLY LangGraph (app.stream)
-# SYNC-ONLY VERSION (no async anywhere)
-# Fix: MemorySaver checkpointer requires configurable.thread_id
-# ===============================
 
 import os
 import re
